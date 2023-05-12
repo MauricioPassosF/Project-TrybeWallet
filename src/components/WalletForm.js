@@ -1,12 +1,23 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { fetchCurrencies } from '../redux/actions';
 
 class WalletForm extends Component {
   state = {
     valueInput: 0,
     descriptionInput: '',
-    // currencyInput: 'BRL',
+    currencyInput: 'USD',
+    methodInput: 'Dinheiro',
+    methodOptions: ['Dinheiro', 'Cartão de crédito', 'Cartão de débito'],
+    tagInput: 'Alimentação',
+    tagOptions: ['Alimentação', 'Lazer', 'Trabalho', 'Transporte', 'Saúde'],
   };
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchCurrencies());
+  }
 
   handleInput = ({ target }) => {
     const { name, value } = target;
@@ -16,7 +27,9 @@ class WalletForm extends Component {
   };
 
   render() {
-    const { valueInput, descriptionInput } = this.state;
+    const { valueInput, descriptionInput, currencyInput,
+      methodOptions, methodInput, tagOptions, tagInput } = this.state;
+    const { currencyOptions } = this.props;
     return (
       <form>
         <label htmlFor="valueInput">
@@ -31,7 +44,7 @@ class WalletForm extends Component {
           />
         </label>
         <label htmlFor="descriptionInput">
-          Descricao:
+          Descrição:
           <input
             type="text"
             data-testid="description-input"
@@ -42,18 +55,63 @@ class WalletForm extends Component {
           />
         </label>
         <label htmlFor="currencyInput">
-          Selecione a raridade da carta
+          Moeda:
           <select
             type="select"
             data-testid="currency-input"
             name="currencyInput"
             id="currencyInput"
-            // value={ currencyInput }
+            value={ currencyInput }
             onChange={ (e) => this.handleInput(e) }
           >
-            <option value="normal">Normal</option>
-            <option value="raro">Raro</option>
-            <option value="muito raro">Muito Raro</option>
+            {currencyOptions.map((currency) => (
+              <option
+                value={ currency }
+                key={ currency }
+              >
+                {currency}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="methodInput">
+          Método de pagamento:
+          <select
+            type="select"
+            data-testid="method-input"
+            name="methodInput"
+            id="methodInput"
+            value={ methodInput }
+            onChange={ (e) => this.handleInput(e) }
+          >
+            {methodOptions.map((method) => (
+              <option
+                value={ method }
+                key={ method }
+              >
+                {method}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label htmlFor="tagInput">
+          Categoria:
+          <select
+            type="select"
+            data-testid="tag-input"
+            name="tagInput"
+            id="tagInput"
+            value={ tagInput }
+            onChange={ (e) => this.handleInput(e) }
+          >
+            {tagOptions.map((tag) => (
+              <option
+                value={ tag }
+                key={ tag }
+              >
+                {tag}
+              </option>
+            ))}
           </select>
         </label>
       </form>
@@ -61,6 +119,13 @@ class WalletForm extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = (state) => ({
+  currencyOptions: state.wallet.currencies,
+});
+
+WalletForm.propTypes = ({
+  dispatch: PropTypes.func,
+  currencyOptions: PropTypes.shape([]),
+}).isRequired;
 
 export default connect(mapStateToProps)(WalletForm);
