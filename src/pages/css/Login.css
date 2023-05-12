@@ -1,0 +1,26 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+div {
+  align-items: center;
+  background-color: #cdc8ea;
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+}
+
+form {
+  align-items: center;
+  background: #e1d5d5;
+  border: solid black 2px;
+  border-radius: 63px;
+  box-shadow: inset 34px 34px 68px #8c8484, inset -34px -34px 68px white;
+  display: flex;
+  flex-direction: column;
+  height: 340px;
+  justify-content: center;
+  width: 340px;
+}
