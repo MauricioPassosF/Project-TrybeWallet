@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { calculateValue } from '../helpers/calculateTotal';
 
 class Table extends Component {
   state = {
@@ -19,6 +20,7 @@ class Table extends Component {
 
   render() {
     const { tableHeader } = this.state;
+    const { expenses } = this.props;
     return (
       <table>
         <thead>
@@ -28,6 +30,25 @@ class Table extends Component {
             ))}
           </tr>
         </thead>
+        <tbody>
+          {expenses
+            .map((expense) => (
+              <tr key={ expense.id }>
+                <td>{expense.description}</td>
+                <td>{expense.tag}</td>
+                <td>{expense.method}</td>
+                <td>{Number(expense.value).toFixed(2)}</td>
+                <td>{expense.exchangeRates[expense.currency].name}</td>
+                <td>{Number(expense.exchangeRates[expense.currency].ask).toFixed(2)}</td>
+                <td>{calculateValue(expense)}</td>
+                <td>BRL</td>
+                <td>
+                  <button>Adicionar</button>
+                  <button>Excluir</button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
       </table>
     );
   }
