@@ -8,9 +8,29 @@ const receiveCurrencies = (currencies) => ({
   payload: currencies,
 });
 
+const addExpense = (expenseWithFetch) => ({
+  type: 'ADD_EXPENSE',
+  payload: expenseWithFetch,
+});
+
 export function fetchCurrencies() {
   return (dispatch) => fetch('https://economia.awesomeapi.com.br/json/all')
     .then((response) => response.json())
     .then((data) => dispatch(receiveCurrencies(Object
       .keys(data).filter((e) => e !== 'USDT'))));
+}
+
+export function addExpenseInState(expenseInfo) {
+  return (dispatch) => {
+    fetch('https://economia.awesomeapi.com.br/json/all')
+      .then((response) => response.json())
+      // .then((data) => data);
+      .then((data) => {
+        const expenseWithFetch = {
+          ...expenseInfo,
+          exchangeRates: data,
+        };
+        return dispatch(addExpense(expenseWithFetch));
+      });
+  };
 }

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchCurrencies } from '../redux/actions';
+import { fetchCurrencies, addExpenseInState } from '../redux/actions';
 
 class WalletForm extends Component {
   state = {
-    valueInput: 0,
+    valueInput: '',
     descriptionInput: '',
     currencyInput: 'USD',
     methodInput: 'Dinheiro',
@@ -23,6 +23,28 @@ class WalletForm extends Component {
     const { name, value } = target;
     this.setState({
       [name]: value,
+    });
+  };
+
+  addExpense = async () => {
+    const { valueInput, descriptionInput, currencyInput,
+      methodInput, tagInput } = this.state;
+    const { expensesLength, dispatch } = this.props;
+    const expenseInfo = {
+      id: expensesLength,
+      value: valueInput,
+      description: descriptionInput,
+      currency: currencyInput,
+      method: methodInput,
+      tag: tagInput,
+    };
+    await dispatch(addExpenseInState(expenseInfo));
+    this.setState({
+      valueInput: '',
+      descriptionInput: '',
+      currencyInput: 'USD',
+      methodInput: 'Dinheiro',
+      tagInput: 'Lazer',
     });
   };
 
@@ -114,6 +136,14 @@ class WalletForm extends Component {
             ))}
           </select>
         </label>
+        <button
+          type="button"
+          id="login-button"
+          // disabled={ loginButtonDisable }
+          onClick={ () => (this.addExpense()) }
+        >
+          Adicionar despesa
+        </button>
       </form>
     );
   }
@@ -121,6 +151,7 @@ class WalletForm extends Component {
 
 const mapStateToProps = (state) => ({
   currencyOptions: state.wallet.currencies,
+  expensesLength: state.wallet.expenses.length,
 });
 
 WalletForm.propTypes = ({
