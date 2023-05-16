@@ -13,6 +13,19 @@ const wallet = (state = INITIAL_STATE, action) => {
   case 'ADD_EXPENSE':
     return { ...state,
       expenses: [...state.expenses, action.payload] };
+  case 'REMOVE_EXPENSE':
+    return { ...state,
+      expenses: state.expenses
+        .filter((expense, index) => index !== action.payload) };
+  case 'EDIT_EXPENSE':
+    return { ...state,
+      editor: true,
+      idToEdit: action.payload };
+  case 'FINISH_EDIT':
+    return { ...state,
+      editor: false,
+      idToEdit: 0,
+      expenses: action.payload };
   default:
     return state;
   }

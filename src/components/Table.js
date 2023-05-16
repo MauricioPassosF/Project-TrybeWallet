@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { calculateValue } from '../helpers/calculateTotal';
+import { removeExpense, editExpense } from '../redux/actions';
 
 class Table extends Component {
   state = {
@@ -19,8 +20,9 @@ class Table extends Component {
   };
 
   render() {
+    console.log('Teste');
     const { tableHeader } = this.state;
-    const { expenses } = this.props;
+    const { expenses, dispatch } = this.props;
     return (
       <table>
         <thead>
@@ -32,7 +34,7 @@ class Table extends Component {
         </thead>
         <tbody>
           {expenses
-            .map((expense) => (
+            .map((expense, index) => (
               <tr key={ expense.id }>
                 <td>{expense.description}</td>
                 <td>{expense.tag}</td>
@@ -43,8 +45,18 @@ class Table extends Component {
                 <td>{calculateValue(expense)}</td>
                 <td>BRL</td>
                 <td>
-                  <button>Adicionar</button>
-                  <button>Excluir</button>
+                  <button
+                    data-testid="edit-btn"
+                    onClick={ () => (dispatch(editExpense(expense.id))) }
+                  >
+                    Editar
+                  </button>
+                  <button
+                    data-testid="delete-btn"
+                    onClick={ () => (dispatch(removeExpense(index))) }
+                  >
+                    Excluir
+                  </button>
                 </td>
               </tr>
             ))}

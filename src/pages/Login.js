@@ -32,8 +32,8 @@ class Login extends Component {
     const { loginButtonDisable, emailInput, passwordInput } = this.state;
     const { dispatch } = this.props;
     return (
-      <div>
-        <form>
+      <div className="login-page">
+        <form className="login-form">
           <label htmlFor="emailInput">
             E-mail:
             <input

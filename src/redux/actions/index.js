@@ -13,6 +13,21 @@ const addExpense = (expenseWithFetch) => ({
   payload: expenseWithFetch,
 });
 
+export const removeExpense = (id) => ({
+  type: 'REMOVE_EXPENSE',
+  payload: id,
+});
+
+export const editExpense = (id) => ({
+  type: 'EDIT_EXPENSE',
+  payload: id,
+});
+
+export const finishEdit = (expenses) => ({
+  type: 'FINISH_EDIT',
+  payload: expenses,
+});
+
 export function fetchCurrencies() {
   return (dispatch) => fetch('https://economia.awesomeapi.com.br/json/all')
     .then((response) => response.json())

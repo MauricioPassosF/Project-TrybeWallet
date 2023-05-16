@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { fetchCurrencies, addExpenseInState } from '../redux/actions';
+import { fetchCurrencies, addExpenseInState, finishEdit } from '../redux/actions';
 
 class WalletForm extends Component {
   state = {
@@ -48,10 +48,33 @@ class WalletForm extends Component {
     });
   };
 
+  editExpense = () => {
+    const { valueInput, descriptionInput, currencyInput,
+      methodInput, tagInput } = this.state;
+    const { idToEdit, dispatch, expenses } = this.props;
+    expenses[idToEdit] = {
+      ...expenses[idToEdit],
+      value: valueInput,
+      description: descriptionInput,
+      currency: currencyInput,
+      method: methodInput,
+      tag: tagInput,
+    };
+    const newExpenses = [...expenses];
+    dispatch(finishEdit(newExpenses));
+    this.setState({
+      valueInput: '',
+      descriptionInput: '',
+      currencyInput: 'USD',
+      methodInput: 'Dinheiro',
+      tagInput: 'Lazer',
+    });
+  };
+
   render() {
     const { valueInput, descriptionInput, currencyInput,
       methodOptions, methodInput, tagOptions, tagInput } = this.state;
-    const { currencyOptions } = this.props;
+    const { currencyOptions, editor } = this.props;
     return (
       <form>
         <label htmlFor="valueInput">
@@ -136,14 +159,25 @@ class WalletForm extends Component {
             ))}
           </select>
         </label>
-        <button
-          type="button"
-          id="login-button"
-          // disabled={ loginButtonDisable }
-          onClick={ () => (this.addExpense()) }
-        >
-          Adicionar despesa
-        </button>
+        { editor ? (
+          <button
+            type="button"
+            id="edit-button"
+            // disabled={ loginButtonDisable }
+            onClick={ () => (this.editExpense()) }
+          >
+            Editar despesa
+          </button>
+        ) : (
+          <button
+            type="button"
+            id="add-button"
+            // disabled={ loginButtonDisable }
+            onClick={ () => (this.addExpense()) }
+          >
+            Adicionar despesa
+          </button>
+        )}
       </form>
     );
   }
@@ -152,11 +186,16 @@ class WalletForm extends Component {
 const mapStateToProps = (state) => ({
   currencyOptions: state.wallet.currencies,
   expensesLength: state.wallet.expenses.length,
+  editor: state.wallet.editor,
+  idToEdit: state.wallet.idToEdit,
+  expenses: state.wallet.expenses,
 });
 
 WalletForm.propTypes = ({
   dispatch: PropTypes.func,
   currencyOptions: PropTypes.shape([]),
+  editor: PropTypes.bool,
+  idToEdit: PropTypes.number,
 }).isRequired;
 
 export default connect(mapStateToProps)(WalletForm);
