@@ -20,7 +20,6 @@ class Table extends Component {
   };
 
   render() {
-    console.log('Teste');
     const { tableHeader } = this.state;
     const { expenses, dispatch } = this.props;
     return (
